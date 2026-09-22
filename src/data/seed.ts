@@ -1,4 +1,4 @@
-import type { Tenant } from '../types'
+import type { PricingPlan, Tenant } from '../types'
 
 export const tenants: Tenant[] = [
   {
@@ -9,6 +9,7 @@ export const tenants: Tenant[] = [
       subdomain: 'greenbands.care.earlybirdalphaforge.com',
       patientIdPrefix: 'GBP',
       plan: 'Growth',
+      status: 'active',
       brandColor: '#0f9d6a',
       address: '14 Admiralty Way, Lekki Phase 1, Lagos',
       phone: '+234 803 555 0142',
@@ -201,6 +202,7 @@ export const tenants: Tenant[] = [
       subdomain: 'doveforte.care.earlybirdalphaforge.com',
       patientIdPrefix: 'DVP',
       plan: 'Starter',
+      status: 'active',
       brandColor: '#0ea5e9',
       address: '46 Ligali Ayorinde Street, Victoria Island, Lagos',
       phone: '+234 701 220 8834',
@@ -304,5 +306,30 @@ export const tenants: Tenant[] = [
       { id: 'dvp-aud-2', actor: 'Ngozi Balogun', action: 'Registered new patient', target: 'DVP-000002 · Emeka Nnamdi', timestamp: '2026-07-22T13:10:00' },
       { id: 'dvp-aud-3', actor: 'Ngozi Balogun', action: 'Updated organisation settings', target: 'Branding · Contact information', timestamp: '2026-06-05T10:00:00' },
     ],
+  },
+]
+
+export const pricingPlans: PricingPlan[] = [
+  {
+    id: 'Starter',
+    price: '₦25,000',
+    period: '/month',
+    tagline: 'For a single pharmacy getting started',
+    features: ['Up to 2 staff accounts', 'Up to 200 patient records', 'Patient registration & timeline', 'Encounters & follow-ups', 'Basic reports'],
+  },
+  {
+    id: 'Growth',
+    price: '₦65,000',
+    period: '/month',
+    tagline: 'For a busy pharmacy with a full team',
+    features: ['Up to 10 staff accounts', 'Unlimited patient records', 'Role-based access control', 'Full reports & audit trail', 'Priority support'],
+    highlight: true,
+  },
+  {
+    id: 'Enterprise',
+    price: 'Custom',
+    period: '',
+    tagline: 'For multi-branch pharmacy groups',
+    features: ['Unlimited staff accounts', 'Multi-branch structure', 'Custom integrations', 'Dedicated account manager', 'SLA-backed support'],
   },
 ]

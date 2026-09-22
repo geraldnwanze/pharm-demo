@@ -72,6 +72,7 @@ export function PlatformDashboardPage() {
                   <p className="truncate text-sm font-medium text-slate-800">{t.organisation.name}</p>
                   <p className="truncate font-mono text-xs text-slate-400">{t.organisation.subdomain}</p>
                 </div>
+                {t.organisation.status === 'suspended' && <Badge tone="danger" dot>Suspended</Badge>}
                 <Badge tone="neutral">{t.patients.length} patients</Badge>
                 <Badge tone="neutral">{t.staff.length} staff</Badge>
               </li>

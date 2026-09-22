@@ -12,7 +12,7 @@ const planTone: Record<string, 'neutral' | 'info' | 'brand'> = {
 }
 
 export function PlatformOrganisationsPage() {
-  const { tenants } = usePlatformData()
+  const { tenants, setOrganisationStatus } = usePlatformData()
   const [createOpen, setCreateOpen] = useState(false)
   const [justCreated, setJustCreated] = useState<{ name: string; subdomain: string } | null>(null)
 
@@ -50,13 +50,15 @@ export function PlatformOrganisationsPage() {
                 <th className="px-5 py-3 font-medium">Organisation</th>
                 <th className="px-5 py-3 font-medium">Subdomain</th>
                 <th className="px-5 py-3 font-medium">Plan</th>
+                <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Staff</th>
                 <th className="px-5 py-3 font-medium">Patients</th>
+                <th className="px-5 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {tenants.map((t) => (
-                <tr key={t.id} className="hover:bg-slate-50">
+                <tr key={t.id} className={`hover:bg-slate-50 ${t.organisation.status === 'suspended' ? 'opacity-60' : ''}`}>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2.5">
                       <span
@@ -75,8 +77,30 @@ export function PlatformOrganisationsPage() {
                   <td className="px-5 py-3">
                     <Badge tone={planTone[t.organisation.plan] ?? 'neutral'}>{t.organisation.plan}</Badge>
                   </td>
+                  <td className="px-5 py-3">
+                    <Badge tone={t.organisation.status === 'suspended' ? 'danger' : 'success'} dot>
+                      {t.organisation.status === 'suspended' ? 'Suspended' : 'Active'}
+                    </Badge>
+                  </td>
                   <td className="px-5 py-3 text-slate-600">{t.staff.length}</td>
                   <td className="px-5 py-3 text-slate-600">{t.patients.length}</td>
+                  <td className="px-5 py-3">
+                    {t.organisation.status === 'suspended' ? (
+                      <button
+                        onClick={() => setOrganisationStatus(t.id, 'active')}
+                        className="text-xs font-medium text-emerald-700 hover:underline"
+                      >
+                        Reactivate
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setOrganisationStatus(t.id, 'suspended')}
+                        className="text-xs font-medium text-rose-600 hover:underline"
+                      >
+                        Suspend
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

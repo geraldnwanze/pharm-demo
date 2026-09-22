@@ -30,34 +30,9 @@ const features = [
   { icon: BarChart3, title: 'Reports', body: 'Encounter breakdowns, follow-up completion rates and staff activity, without spreadsheets.' },
 ]
 
-const plans: { id: Organisation['plan']; price: string; period: string; tagline: string; features: string[]; highlight?: boolean }[] = [
-  {
-    id: 'Starter',
-    price: '₦25,000',
-    period: '/month',
-    tagline: 'For a single pharmacy getting started',
-    features: ['Up to 2 staff accounts', 'Up to 200 patient records', 'Patient registration & timeline', 'Encounters & follow-ups', 'Basic reports'],
-  },
-  {
-    id: 'Growth',
-    price: '₦65,000',
-    period: '/month',
-    tagline: 'For a busy pharmacy with a full team',
-    features: ['Up to 10 staff accounts', 'Unlimited patient records', 'Role-based access control', 'Full reports & audit trail', 'Priority support'],
-    highlight: true,
-  },
-  {
-    id: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    tagline: 'For multi-branch pharmacy groups',
-    features: ['Unlimited staff accounts', 'Multi-branch structure', 'Custom integrations', 'Dedicated account manager', 'SLA-backed support'],
-  },
-]
-
 export function LandingPage() {
   const navigate = useNavigate()
-  const { createOrganisation } = usePlatformData()
+  const { createOrganisation, plans } = usePlatformData()
   const { switchTenant } = useAppData()
 
   const [form, setForm] = useState({

@@ -66,12 +66,15 @@ export interface AuditEntry {
   timestamp: string
 }
 
+export type PlanId = 'Starter' | 'Growth' | 'Enterprise'
+
 export interface Organisation {
   name: string
   shortName: string
   subdomain: string
   patientIdPrefix: string
-  plan: 'Starter' | 'Growth' | 'Enterprise'
+  plan: PlanId
+  status: 'active' | 'suspended'
   brandColor: string
   address: string
   phone: string
@@ -84,4 +87,13 @@ export interface Tenant {
   staff: StaffMember[]
   patients: Patient[]
   auditLog: AuditEntry[]
+}
+
+export interface PricingPlan {
+  id: PlanId
+  price: string
+  period: string
+  tagline: string
+  features: string[]
+  highlight?: boolean
 }

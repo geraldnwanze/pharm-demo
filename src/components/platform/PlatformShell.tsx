@@ -1,9 +1,10 @@
-import { FileClock, LayoutDashboard, LogOut, ShieldAlert, Sparkles, UsersRound } from 'lucide-react'
+import { FileClock, LayoutDashboard, LogOut, ShieldAlert, Sparkles, Tag, UsersRound } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 
 const navItems = [
   { to: '/platform', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/platform/organisations', label: 'Organisations', icon: UsersRound },
+  { to: '/platform/pricing', label: 'Pricing', icon: Tag },
   { to: '/platform/audit-log', label: 'Audit Log', icon: FileClock },
 ]
 
@@ -80,6 +81,13 @@ export function PlatformShell() {
                 {item.label}
               </NavLink>
             ))}
+            <NavLink
+              to="/login"
+              className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-500 hover:bg-slate-800"
+            >
+              <LogOut size={14} />
+              Exit
+            </NavLink>
           </nav>
         </header>
         <main className="flex-1 bg-slate-100 px-4 py-6 sm:px-6 lg:px-8">

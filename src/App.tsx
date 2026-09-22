@@ -13,6 +13,7 @@ import { PlatformAuditLogPage } from './pages/platform/PlatformAuditLogPage'
 import { PlatformDashboardPage } from './pages/platform/PlatformDashboardPage'
 import { PlatformLoginPage } from './pages/platform/PlatformLoginPage'
 import { PlatformOrganisationsPage } from './pages/platform/PlatformOrganisationsPage'
+import { PlatformPricingPage } from './pages/platform/PlatformPricingPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { StaffPage } from './pages/StaffPage'
@@ -38,6 +39,7 @@ function App() {
             <Route path="/platform" element={<PlatformShell />}>
               <Route index element={<PlatformDashboardPage />} />
               <Route path="organisations" element={<PlatformOrganisationsPage />} />
+              <Route path="pricing" element={<PlatformPricingPage />} />
               <Route path="audit-log" element={<PlatformAuditLogPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

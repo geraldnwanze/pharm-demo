@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Lock, ShieldCheck } from 'lucide-react'
+import { Activity, ArrowRight, Lock, ShieldAlert, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
@@ -19,6 +19,7 @@ export function LoginPage() {
   const [email, setEmail] = useState(matchedStaff.email)
   const [password, setPassword] = useState('••••••••')
   const [loading, setLoading] = useState(false)
+  const isSuspended = tenant.organisation.status === 'suspended'
 
   function handleTenantChange(nextTenantId: string) {
     setTenantId(nextTenantId)
@@ -35,6 +36,7 @@ export function LoginPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (isSuspended) return
     setLoading(true)
     setTimeout(() => {
       switchTenant(tenant, matchedStaff.id)
@@ -84,6 +86,15 @@ export function LoginPage() {
             Signing in to <span className="font-mono text-xs text-slate-600">{tenant.organisation.subdomain}</span>
           </p>
 
+          {isSuspended && (
+            <div className="mt-4 flex items-start gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2.5">
+              <ShieldAlert size={15} className="mt-0.5 shrink-0 text-rose-600" />
+              <p className="text-xs leading-relaxed text-rose-700">
+                This organisation's workspace has been suspended by Earlybird AlphaForge. Contact platform support to restore access.
+              </p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
               <label className="mb-1 block text-xs font-medium text-slate-700">Organisation</label>
@@ -95,6 +106,7 @@ export function LoginPage() {
                 {tenants.map((t) => (
                   <option key={t.id} value={t.id}>
                     {t.organisation.name}
+                    {t.organisation.status === 'suspended' ? ' (Suspended)' : ''}
                   </option>
                 ))}
               </select>
@@ -144,11 +156,11 @@ export function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-medium text-white shadow-sm shadow-black/10 hover:brightness-90 disabled:opacity-60"
+              disabled={loading || isSuspended}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-medium text-white shadow-sm shadow-black/10 hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? 'Signing in…' : 'Sign in'}
-              {!loading && <ArrowRight size={15} />}
+              {isSuspended ? 'Workspace suspended' : loading ? 'Signing in…' : 'Sign in'}
+              {!loading && !isSuspended && <ArrowRight size={15} />}
             </button>
           </form>
 

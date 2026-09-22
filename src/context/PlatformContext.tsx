@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
-import { tenants as seedTenants } from '../data/seed'
-import type { AuditEntry, Organisation, Tenant } from '../types'
+import { pricingPlans as seedPricingPlans, tenants as seedTenants } from '../data/seed'
+import type { AuditEntry, Organisation, PlanId, PricingPlan, Tenant } from '../types'
 
 export interface NewOrganisationInput {
   name: string
@@ -19,8 +19,11 @@ export interface NewOrganisationInput {
 
 interface PlatformDataValue {
   tenants: Tenant[]
+  plans: PricingPlan[]
   platformAuditLog: AuditEntry[]
   createOrganisation: (input: NewOrganisationInput) => Tenant
+  setOrganisationStatus: (tenantId: string, status: Organisation['status']) => void
+  updatePlan: (planId: PlanId, updates: Partial<Omit<PricingPlan, 'id'>>) => void
   logPlatformAction: (action: string, target: string, actor?: string) => void
 }
 
@@ -33,6 +36,7 @@ const seedPlatformAudit: AuditEntry[] = [
 
 export function PlatformProvider({ children }: { children: ReactNode }) {
   const [tenants, setTenants] = useState<Tenant[]>(seedTenants)
+  const [plans, setPlans] = useState<PricingPlan[]>(seedPricingPlans)
   const [platformAuditLog, setPlatformAuditLog] = useState<AuditEntry[]>(seedPlatformAudit)
 
   const logPlatformAction = useCallback((action: string, target: string, actor = 'Earlybird Platform Admin') => {
@@ -52,6 +56,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
         subdomain: `${id}.care.earlybirdalphaforge.com`,
         patientIdPrefix: input.patientIdPrefix.toUpperCase(),
         plan: input.plan,
+        status: 'active',
         brandColor: input.brandColor,
         address: input.address,
         phone: input.phone,
@@ -88,12 +93,26 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
     return tenant
   }, [logPlatformAction])
 
+  const setOrganisationStatus: PlatformDataValue['setOrganisationStatus'] = useCallback((tenantId, status) => {
+    const target = tenants.find((t) => t.id === tenantId)
+    setTenants((prev) => prev.map((t) => (t.id === tenantId ? { ...t, organisation: { ...t.organisation, status } } : t)))
+    logPlatformAction(status === 'suspended' ? 'Suspended organisation' : 'Reactivated organisation', target?.organisation.name ?? tenantId)
+  }, [logPlatformAction, tenants])
+
+  const updatePlan: PlatformDataValue['updatePlan'] = useCallback((planId, updates) => {
+    setPlans((prev) => prev.map((p) => (p.id === planId ? { ...p, ...updates } : p)))
+    logPlatformAction('Updated plan pricing', planId)
+  }, [logPlatformAction])
+
   const value = useMemo<PlatformDataValue>(() => ({
     tenants,
+    plans,
     platformAuditLog,
     createOrganisation,
+    setOrganisationStatus,
+    updatePlan,
     logPlatformAction,
-  }), [tenants, platformAuditLog, createOrganisation, logPlatformAction])
+  }), [tenants, plans, platformAuditLog, createOrganisation, setOrganisationStatus, updatePlan, logPlatformAction])
 
   return <PlatformContext.Provider value={value}>{children}</PlatformContext.Provider>
 }
