@@ -95,7 +95,7 @@ function SettingsPageContent() {
                   </button>
                 ))}
                 <span className="ml-2 inline-flex items-center gap-1.5 text-xs text-slate-400">
-                  <Palette size={13} /> Applied to buttons, badges &amp; the sidebar mark
+                  <Palette size={13} /> Applied live to primary buttons, the active nav state &amp; the sidebar mark
                 </span>
               </div>
             </div>

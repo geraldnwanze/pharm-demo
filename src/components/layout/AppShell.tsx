@@ -1,5 +1,5 @@
 import { Activity, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAppData } from '../../context/AppDataContext'
 import { navItems } from './navItems'
@@ -10,6 +10,10 @@ export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { organisation, currentUser } = useAppData()
 
+  useEffect(() => {
+    document.documentElement.style.setProperty('--brand', organisation.brandColor)
+  }, [organisation.brandColor])
+
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
@@ -19,7 +23,7 @@ export function AppShell() {
           <div className="w-72 bg-white p-3">
             <div className="mb-2 flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand)] text-white">
                   <Activity size={16} />
                 </div>
                 <span className="text-sm font-semibold text-slate-900">{organisation.shortName}</span>
@@ -39,7 +43,7 @@ export function AppShell() {
                     onClick={() => setMobileOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium ${
-                        isActive ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600'
+                        isActive ? 'bg-[color-mix(in_srgb,var(--brand)_12%,white)] text-[var(--brand)]' : 'text-slate-600'
                       }`
                     }
                   >

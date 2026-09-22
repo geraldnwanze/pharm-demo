@@ -9,7 +9,7 @@ export function Sidebar() {
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
       <div className="flex items-center gap-2.5 border-b border-slate-100 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand)] text-white">
           <Activity size={18} />
         </div>
         <div className="min-w-0">
@@ -28,7 +28,9 @@ export function Sidebar() {
               end={item.to === '/'}
               className={({ isActive }) =>
                 `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  isActive
+                    ? 'bg-[color-mix(in_srgb,var(--brand)_12%,white)] text-[var(--brand)]'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`
               }
             >
@@ -40,7 +42,7 @@ export function Sidebar() {
 
       <div className="border-t border-slate-100 p-3">
         <div className="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2.5">
-          <ShieldCheck size={15} className="shrink-0 text-emerald-600" />
+          <ShieldCheck size={15} className="shrink-0 text-[var(--brand)]" />
           <p className="text-[11px] leading-snug text-slate-500">
             Data isolated to <span className="font-medium text-slate-700">{organisation.shortName}</span> workspace only
           </p>

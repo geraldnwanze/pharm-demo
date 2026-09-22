@@ -1,4 +1,4 @@
-import { CalendarClock, ClipboardList, Search, UserPlus, Users, UserRoundPlus } from 'lucide-react'
+import { BarChart3, CalendarClock, ClipboardList, Search, UserPlus, Users, UserRoundPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { NewEncounterModal } from '../components/patients/NewEncounterModal'
@@ -73,7 +73,7 @@ export function DashboardPage() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setNewPatientOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm shadow-emerald-600/20 hover:bg-emerald-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3.5 py-2 text-sm font-medium text-white shadow-sm shadow-black/10 hover:brightness-90"
           >
             <UserRoundPlus size={16} />
             Register Patient
@@ -143,6 +143,14 @@ export function DashboardPage() {
                 </span>
                 <span className="text-xs font-medium text-slate-700">Search Patient</span>
               </Link>
+              {currentUser.role === 'Organisation Admin' && (
+                <Link to="/reports" className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 px-3 py-4 text-center hover:bg-slate-50">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                    <BarChart3 size={18} />
+                  </span>
+                  <span className="text-xs font-medium text-slate-700">Reports</span>
+                </Link>
+              )}
             </div>
           </Card>
         </div>

@@ -21,6 +21,8 @@ interface AppDataValue {
   addFollowUp: (patientId: string, input: Omit<FollowUp, 'id' | 'status'>) => void
   completeFollowUp: (patientId: string, followUpId: string) => void
   inviteStaff: (input: { name: string; email: string; role: StaffRole }) => void
+  setStaffStatus: (staffId: string, status: StaffMember['status']) => void
+  resetStaffAccess: (staffId: string) => void
   updateOrganisation: (updates: Partial<Organisation>) => void
   logAction: (action: string, target: string) => void
 }
@@ -125,6 +127,17 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     logAction('Invited staff member', `${input.name} (${input.role})`)
   }, [logAction])
 
+  const setStaffStatus: AppDataValue['setStaffStatus'] = useCallback((staffId, status) => {
+    const target = staffList.find((s) => s.id === staffId)
+    setStaffList((prev) => prev.map((s) => (s.id === staffId ? { ...s, status } : s)))
+    logAction(status === 'deactivated' ? 'Deactivated staff account' : 'Reactivated staff account', target?.name ?? staffId)
+  }, [logAction, staffList])
+
+  const resetStaffAccess: AppDataValue['resetStaffAccess'] = useCallback((staffId) => {
+    const target = staffList.find((s) => s.id === staffId)
+    logAction('Reset access for staff member', target?.name ?? staffId)
+  }, [logAction, staffList])
+
   const updateOrganisation: AppDataValue['updateOrganisation'] = useCallback((updates) => {
     setOrg((prev) => ({ ...prev, ...updates }))
     logAction('Updated organisation settings', Object.keys(updates).join(', '))
@@ -143,9 +156,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     addFollowUp,
     completeFollowUp,
     inviteStaff,
+    setStaffStatus,
+    resetStaffAccess,
     updateOrganisation,
     logAction,
-  }), [org, patientList, staffList, audit, currentUser, setCurrentUserRole, getPatient, addPatient, addEncounter, addFollowUp, completeFollowUp, inviteStaff, updateOrganisation, logAction])
+  }), [org, patientList, staffList, audit, currentUser, setCurrentUserRole, getPatient, addPatient, addEncounter, addFollowUp, completeFollowUp, inviteStaff, setStaffStatus, resetStaffAccess, updateOrganisation, logAction])
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>
 }

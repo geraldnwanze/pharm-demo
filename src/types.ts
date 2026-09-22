@@ -34,6 +34,12 @@ export interface FollowUp {
   assignedTo: string
 }
 
+export interface EmergencyContact {
+  name: string
+  phone: string
+  relationship?: string
+}
+
 export interface Patient {
   id: string
   fullName: string
@@ -42,6 +48,7 @@ export interface Patient {
   phone: string
   email?: string
   address?: string
+  emergencyContact?: EmergencyContact
   allergies: string[]
   conditions: string[]
   medications: string[]

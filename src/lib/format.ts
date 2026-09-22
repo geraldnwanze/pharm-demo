@@ -32,6 +32,11 @@ export function age(dob: string, now = new Date('2026-09-22')) {
   return years
 }
 
+export function truncate(text: string, maxLength: number) {
+  if (text.length <= maxLength) return text
+  return `${text.slice(0, maxLength).trimEnd()}…`
+}
+
 export function initials(name: string) {
   return name
     .split(' ')

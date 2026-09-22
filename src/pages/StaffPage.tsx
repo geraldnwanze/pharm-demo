@@ -1,4 +1,4 @@
-import { Mail, ShieldCheck, UserPlus, UsersRound } from 'lucide-react'
+import { KeyRound, Mail, ShieldCheck, UserPlus, UsersRound } from 'lucide-react'
 import { useState } from 'react'
 import { RoleGuard } from '../components/layout/RoleGuard'
 import { Badge } from '../components/ui/Badge'
@@ -25,11 +25,18 @@ export function StaffPage() {
 }
 
 function StaffPageContent() {
-  const { staff, inviteStaff } = useAppData()
+  const { staff, currentUser, inviteStaff, setStaffStatus, resetStaffAccess } = useAppData()
   const [inviteOpen, setInviteOpen] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<StaffRole>('Pharmacist')
+  const [justReset, setJustReset] = useState<string | null>(null)
+
+  function handleResetAccess(staffId: string) {
+    resetStaffAccess(staffId)
+    setJustReset(staffId)
+    setTimeout(() => setJustReset((current) => (current === staffId ? null : current)), 2500)
+  }
 
   function handleInvite(e: React.FormEvent) {
     e.preventDefault()
@@ -57,7 +64,7 @@ function StaffPageContent() {
         {(Object.keys(roleDescriptions) as StaffRole[]).map((r) => (
           <Card key={r} className="p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-              <ShieldCheck size={15} className="text-emerald-600" /> {r}
+              <ShieldCheck size={15} className="text-[var(--brand)]" /> {r}
             </div>
             <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{roleDescriptions[r]}</p>
           </Card>
@@ -75,6 +82,7 @@ function StaffPageContent() {
                 <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Last Active</th>
                 <th className="px-5 py-3 font-medium">Joined</th>
+                <th className="px-5 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -101,6 +109,35 @@ function StaffPageContent() {
                   </td>
                   <td className="px-5 py-3 text-slate-500">{s.lastActive === '—' ? '—' : timeAgo(s.lastActive)}</td>
                   <td className="px-5 py-3 text-slate-500">{formatDate(s.joinedAt)}</td>
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-3">
+                      {s.status === 'deactivated' ? (
+                        <button
+                          onClick={() => setStaffStatus(s.id, 'active')}
+                          className="text-xs font-medium text-emerald-700 hover:underline"
+                        >
+                          Reactivate
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setStaffStatus(s.id, 'deactivated')}
+                          disabled={s.email === currentUser.email}
+                          title={s.email === currentUser.email ? "You can't deactivate your own account" : undefined}
+                          className="text-xs font-medium text-rose-600 hover:underline disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+                        >
+                          Deactivate
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleResetAccess(s.id)}
+                        disabled={s.status === 'deactivated'}
+                        className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-800 hover:underline disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+                      >
+                        <KeyRound size={11} />
+                        {justReset === s.id ? 'Reset sent' : 'Reset access'}
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

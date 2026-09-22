@@ -59,7 +59,7 @@ export function LoginPage() {
       <div className="flex w-full items-center justify-center px-6 lg:w-1/2">
         <div className="w-full max-w-sm">
           <div className="mb-8 flex items-center gap-2.5 lg:hidden">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand)] text-white">
               <Activity size={18} />
             </div>
             <span className="text-sm font-semibold text-slate-900">{organisation.shortName}</span>
@@ -111,7 +111,7 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-medium text-white shadow-sm shadow-black/10 hover:brightness-90 disabled:opacity-60"
             >
               {loading ? 'Signing in…' : 'Sign in'}
               {!loading && <ArrowRight size={15} />}

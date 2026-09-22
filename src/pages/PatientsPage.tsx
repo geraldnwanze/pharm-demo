@@ -37,7 +37,7 @@ export function PatientsPage() {
         </div>
         <button
           onClick={() => setNewPatientOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm shadow-emerald-600/20 hover:bg-emerald-700"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3.5 py-2 text-sm font-medium text-white shadow-sm shadow-black/10 hover:brightness-90"
         >
           <UserRoundPlus size={16} />
           Register Patient
@@ -61,7 +61,7 @@ export function PatientsPage() {
                 key={s}
                 onClick={() => setStatus(s)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize ${
-                  status === s ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  status === s ? 'bg-[var(--brand)] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 {s}

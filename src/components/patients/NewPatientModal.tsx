@@ -12,6 +12,9 @@ const emptyForm = {
   phone: '',
   email: '',
   address: '',
+  emergencyContactName: '',
+  emergencyContactPhone: '',
+  emergencyContactRelationship: '',
   allergies: '',
   conditions: '',
 }
@@ -35,6 +38,13 @@ export function NewPatientModal({ open, onClose }: { open: boolean; onClose: () 
       phone: form.phone.trim(),
       email: form.email.trim() || undefined,
       address: form.address.trim() || undefined,
+      emergencyContact: form.emergencyContactName.trim() && form.emergencyContactPhone.trim()
+        ? {
+            name: form.emergencyContactName.trim(),
+            phone: form.emergencyContactPhone.trim(),
+            relationship: form.emergencyContactRelationship.trim() || undefined,
+          }
+        : undefined,
       allergies: form.allergies ? form.allergies.split(',').map((s) => s.trim()).filter(Boolean) : [],
       conditions: form.conditions ? form.conditions.split(',').map((s) => s.trim()).filter(Boolean) : [],
       medications: [],
@@ -82,6 +92,28 @@ export function NewPatientModal({ open, onClose }: { open: boolean; onClose: () 
             <Input value={form.address} onChange={(e) => update('address', e.target.value)} placeholder="optional" />
           </div>
         </FieldRow>
+
+        <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+          <p className="mb-3 text-xs font-medium text-slate-500">Emergency contact (optional)</p>
+          <FieldRow>
+            <div>
+              <Label>Contact name</Label>
+              <Input value={form.emergencyContactName} onChange={(e) => update('emergencyContactName', e.target.value)} placeholder="e.g. Jane Doe" />
+            </div>
+            <div>
+              <Label>Contact phone</Label>
+              <Input value={form.emergencyContactPhone} onChange={(e) => update('emergencyContactPhone', e.target.value)} placeholder="0803 000 0000" />
+            </div>
+          </FieldRow>
+          <div className="mt-4">
+            <Label>Relationship to patient</Label>
+            <Input
+              value={form.emergencyContactRelationship}
+              onChange={(e) => update('emergencyContactRelationship', e.target.value)}
+              placeholder="e.g. Spouse, Parent, Sibling"
+            />
+          </div>
+        </div>
 
         <div>
           <Label>Known allergies</Label>
