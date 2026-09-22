@@ -1,4 +1,4 @@
-import { Activity, X } from 'lucide-react'
+import { Activity, LogOut, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAppData } from '../../context/AppDataContext'
@@ -52,6 +52,14 @@ export function AppShell() {
                   </NavLink>
                 ))}
             </nav>
+            <NavLink
+              to="/login"
+              onClick={() => setMobileOpen(false)}
+              className="mt-2 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50"
+            >
+              <LogOut size={17} />
+              Switch organisation
+            </NavLink>
           </div>
           <div className="flex-1 bg-slate-900/40" onClick={() => setMobileOpen(false)} />
         </div>

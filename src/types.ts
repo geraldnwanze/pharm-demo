@@ -70,9 +70,18 @@ export interface Organisation {
   name: string
   shortName: string
   subdomain: string
+  patientIdPrefix: string
   plan: 'Starter' | 'Growth' | 'Enterprise'
   brandColor: string
   address: string
   phone: string
   email: string
+}
+
+export interface Tenant {
+  id: string
+  organisation: Organisation
+  staff: StaffMember[]
+  patients: Patient[]
+  auditLog: AuditEntry[]
 }

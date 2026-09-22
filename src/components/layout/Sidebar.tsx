@@ -1,5 +1,5 @@
-import { Activity, ShieldCheck, Sparkles } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { Activity, LogOut, ShieldCheck, Sparkles } from 'lucide-react'
+import { Link, NavLink } from 'react-router-dom'
 import { useAppData } from '../../context/AppDataContext'
 import { navItems } from './navItems'
 
@@ -47,6 +47,13 @@ export function Sidebar() {
             Data isolated to <span className="font-medium text-slate-700">{organisation.shortName}</span> workspace only
           </p>
         </div>
+        <Link
+          to="/login"
+          className="mt-2 flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-medium text-slate-500 hover:bg-slate-50"
+        >
+          <LogOut size={13} />
+          Switch organisation
+        </Link>
         <a
           href="#"
           onClick={(e) => e.preventDefault()}

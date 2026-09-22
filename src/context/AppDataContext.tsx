@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
-import { auditLog as seedAudit, organisation as seedOrg, patients as seedPatients, staff as seedStaff } from '../data/seed'
+import { tenants } from '../data/seed'
 import type { AuditEntry, Encounter, FollowUp, Organisation, Patient, StaffMember, StaffRole } from '../types'
 
 export type CurrentUser = {
@@ -8,12 +8,16 @@ export type CurrentUser = {
   email: string
 }
 
+const defaultTenant = tenants[0]
+
 interface AppDataValue {
+  currentTenantId: string
   organisation: Organisation
   patients: Patient[]
   staff: StaffMember[]
   auditLog: AuditEntry[]
   currentUser: CurrentUser
+  switchTenant: (tenantId: string, asStaffId?: string) => void
   setCurrentUserRole: (role: StaffRole) => void
   getPatient: (id: string) => Patient | undefined
   addPatient: (input: Omit<Patient, 'id' | 'encounters' | 'followUps' | 'registeredAt' | 'status'>) => Patient
@@ -29,23 +33,24 @@ interface AppDataValue {
 
 const AppDataContext = createContext<AppDataValue | null>(null)
 
-function nextPatientId(existing: Patient[]) {
+function nextPatientId(existing: Patient[], prefix: string) {
   const max = existing.reduce((acc, p) => {
     const n = Number(p.id.split('-')[1])
     return Number.isFinite(n) ? Math.max(acc, n) : acc
   }, 0)
-  return `GBP-${String(max + 1).padStart(6, '0')}`
+  return `${prefix}-${String(max + 1).padStart(6, '0')}`
 }
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
-  const [org, setOrg] = useState<Organisation>(seedOrg)
-  const [patientList, setPatientList] = useState<Patient[]>(seedPatients)
-  const [staffList, setStaffList] = useState<StaffMember[]>(seedStaff)
-  const [audit, setAudit] = useState<AuditEntry[]>(seedAudit)
+  const [currentTenantId, setCurrentTenantId] = useState(defaultTenant.id)
+  const [org, setOrg] = useState<Organisation>(defaultTenant.organisation)
+  const [patientList, setPatientList] = useState<Patient[]>(defaultTenant.patients)
+  const [staffList, setStaffList] = useState<StaffMember[]>(defaultTenant.staff)
+  const [audit, setAudit] = useState<AuditEntry[]>(defaultTenant.auditLog)
   const [currentUser, setCurrentUser] = useState<CurrentUser>({
-    name: 'Adaeze Okonkwo',
-    role: 'Organisation Admin',
-    email: 'adaeze@greenbandspharmacy.ng',
+    name: defaultTenant.staff[0].name,
+    role: defaultTenant.staff[0].role,
+    email: defaultTenant.staff[0].email,
   })
 
   const logAction = useCallback((action: string, target: string) => {
@@ -55,13 +60,21 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     ])
   }, [currentUser.name])
 
+  const switchTenant: AppDataValue['switchTenant'] = useCallback((tenantId, asStaffId) => {
+    const tenant = tenants.find((t) => t.id === tenantId) ?? defaultTenant
+    setCurrentTenantId(tenant.id)
+    setOrg(tenant.organisation)
+    setPatientList(tenant.patients)
+    setStaffList(tenant.staff)
+    setAudit(tenant.auditLog)
+    const staffMatch = tenant.staff.find((s) => s.id === asStaffId) ?? tenant.staff[0]
+    setCurrentUser({ name: staffMatch.name, role: staffMatch.role, email: staffMatch.email })
+  }, [])
+
   const setCurrentUserRole = useCallback((role: StaffRole) => {
     const match = staffList.find((s) => s.role === role)
-    setCurrentUser({
-      name: match?.name ?? 'Adaeze Okonkwo',
-      role,
-      email: match?.email ?? 'adaeze@greenbandspharmacy.ng',
-    })
+    if (!match) return
+    setCurrentUser({ name: match.name, role, email: match.email })
   }, [staffList])
 
   const getPatient = useCallback((id: string) => patientList.find((p) => p.id === id), [patientList])
@@ -69,7 +82,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const addPatient: AppDataValue['addPatient'] = useCallback((input) => {
     let created!: Patient
     setPatientList((prev) => {
-      const id = nextPatientId(prev)
+      const id = nextPatientId(prev, org.patientIdPrefix)
       created = {
         ...input,
         id,
@@ -82,7 +95,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     })
     logAction('Registered new patient', `${input.fullName}`)
     return created
-  }, [logAction])
+  }, [logAction, org.patientIdPrefix])
 
   const addEncounter: AppDataValue['addEncounter'] = useCallback((patientId, input) => {
     setPatientList((prev) =>
@@ -144,11 +157,13 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [logAction])
 
   const value = useMemo<AppDataValue>(() => ({
+    currentTenantId,
     organisation: org,
     patients: patientList,
     staff: staffList,
     auditLog: audit,
     currentUser,
+    switchTenant,
     setCurrentUserRole,
     getPatient,
     addPatient,
@@ -160,7 +175,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     resetStaffAccess,
     updateOrganisation,
     logAction,
-  }), [org, patientList, staffList, audit, currentUser, setCurrentUserRole, getPatient, addPatient, addEncounter, addFollowUp, completeFollowUp, inviteStaff, setStaffStatus, resetStaffAccess, updateOrganisation, logAction])
+  }), [currentTenantId, org, patientList, staffList, audit, currentUser, switchTenant, setCurrentUserRole, getPatient, addPatient, addEncounter, addFollowUp, completeFollowUp, inviteStaff, setStaffStatus, resetStaffAccess, updateOrganisation, logAction])
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>
 }
