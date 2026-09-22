@@ -1,0 +1,71 @@
+export type StaffRole = 'Organisation Admin' | 'Pharmacist' | 'Support Staff'
+
+export interface StaffMember {
+  id: string
+  name: string
+  email: string
+  role: StaffRole
+  status: 'active' | 'invited' | 'deactivated'
+  lastActive: string
+  joinedAt: string
+}
+
+export type EncounterKind = 'Consultation' | 'Medication Review' | 'New Consultation' | 'Chronic Care Review'
+
+export interface Encounter {
+  id: string
+  kind: EncounterKind
+  date: string
+  clinician: string
+  notes: string
+  vitals?: {
+    bp?: string
+    temp?: string
+    weight?: string
+  }
+}
+
+export interface FollowUp {
+  id: string
+  date: string
+  dueDate: string
+  reason: string
+  status: 'pending' | 'completed' | 'overdue'
+  assignedTo: string
+}
+
+export interface Patient {
+  id: string
+  fullName: string
+  dob: string
+  sex: 'Female' | 'Male'
+  phone: string
+  email?: string
+  address?: string
+  allergies: string[]
+  conditions: string[]
+  medications: string[]
+  status: 'active' | 'inactive'
+  registeredAt: string
+  encounters: Encounter[]
+  followUps: FollowUp[]
+}
+
+export interface AuditEntry {
+  id: string
+  actor: string
+  action: string
+  target: string
+  timestamp: string
+}
+
+export interface Organisation {
+  name: string
+  shortName: string
+  subdomain: string
+  plan: 'Starter' | 'Growth' | 'Enterprise'
+  brandColor: string
+  address: string
+  phone: string
+  email: string
+}
