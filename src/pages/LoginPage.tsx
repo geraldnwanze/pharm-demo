@@ -1,8 +1,8 @@
 import { Activity, ArrowRight, Lock, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAppData } from '../context/AppDataContext'
-import { tenants } from '../data/seed'
+import { usePlatformData } from '../context/PlatformContext'
 import type { StaffRole } from '../types'
 
 const roles: StaffRole[] = ['Organisation Admin', 'Pharmacist', 'Support Staff']
@@ -10,6 +10,7 @@ const roles: StaffRole[] = ['Organisation Admin', 'Pharmacist', 'Support Staff']
 export function LoginPage() {
   const navigate = useNavigate()
   const { switchTenant } = useAppData()
+  const { tenants } = usePlatformData()
   const [tenantId, setTenantId] = useState(tenants[0].id)
   const [role, setRole] = useState<StaffRole>('Organisation Admin')
 
@@ -153,6 +154,10 @@ export function LoginPage() {
 
           <p className="mt-6 text-center text-xs text-slate-400">
             This is a scoped organisation login — not the Earlybird platform admin console.
+            <br />
+            <Link to="/platform/login" className="font-medium text-slate-500 hover:text-slate-700 hover:underline">
+              Earlybird staff? Sign in to the platform console →
+            </Link>
           </p>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
-import { tenants } from '../data/seed'
+import { tenants as seedTenants } from '../data/seed'
+import { usePlatformData } from './PlatformContext'
 import type { AuditEntry, Encounter, FollowUp, Organisation, Patient, StaffMember, StaffRole } from '../types'
 
 export type CurrentUser = {
@@ -8,7 +9,7 @@ export type CurrentUser = {
   email: string
 }
 
-const defaultTenant = tenants[0]
+const defaultTenant = seedTenants[0]
 
 interface AppDataValue {
   currentTenantId: string
@@ -42,6 +43,7 @@ function nextPatientId(existing: Patient[], prefix: string) {
 }
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
+  const { tenants } = usePlatformData()
   const [currentTenantId, setCurrentTenantId] = useState(defaultTenant.id)
   const [org, setOrg] = useState<Organisation>(defaultTenant.organisation)
   const [patientList, setPatientList] = useState<Patient[]>(defaultTenant.patients)
@@ -69,7 +71,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setAudit(tenant.auditLog)
     const staffMatch = tenant.staff.find((s) => s.id === asStaffId) ?? tenant.staff[0]
     setCurrentUser({ name: staffMatch.name, role: staffMatch.role, email: staffMatch.email })
-  }, [])
+  }, [tenants])
 
   const setCurrentUserRole = useCallback((role: StaffRole) => {
     const match = staffList.find((s) => s.role === role)
