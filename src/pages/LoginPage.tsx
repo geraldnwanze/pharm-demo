@@ -37,8 +37,8 @@ export function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setTimeout(() => {
-      switchTenant(tenant.id, matchedStaff.id)
-      navigate('/')
+      switchTenant(tenant, matchedStaff.id)
+      navigate('/app')
     }, 500)
   }
 
@@ -153,6 +153,12 @@ export function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-xs text-slate-400">
+            New to Earlybird?{' '}
+            <Link to="/" className="font-medium text-slate-500 hover:text-slate-700 hover:underline">
+              Explore plans and register your organisation →
+            </Link>
+          </p>
+          <p className="mt-2 text-center text-xs text-slate-400">
             This is a scoped organisation login — not the Earlybird platform admin console.
             <br />
             <Link to="/platform/login" className="font-medium text-slate-500 hover:text-slate-700 hover:underline">

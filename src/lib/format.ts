@@ -32,6 +32,21 @@ export function age(dob: string, now = new Date('2026-09-22')) {
   return years
 }
 
+export function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
+export function deriveOrgPrefix(name: string) {
+  const words = name.trim().split(/\s+/).filter(Boolean)
+  if (words.length >= 2) {
+    return words.slice(0, 4).map((w) => w[0]).join('').toUpperCase()
+  }
+  return (words[0] ?? '').slice(0, 3).toUpperCase()
+}
+
 export function truncate(text: string, maxLength: number) {
   if (text.length <= maxLength) return text
   return `${text.slice(0, maxLength).trimEnd()}…`

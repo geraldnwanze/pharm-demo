@@ -41,7 +41,7 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
               <button
                 key={p.id}
                 onClick={() => {
-                  navigate(`/patients/${p.id}`)
+                  navigate(`/app/patients/${p.id}`)
                   setQuery('')
                 }}
                 className="flex w-full items-center justify-between px-3.5 py-2 text-left text-sm hover:bg-slate-50"

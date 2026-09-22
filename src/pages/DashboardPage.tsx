@@ -79,7 +79,7 @@ export function DashboardPage() {
             Register Patient
           </button>
           <Link
-            to="/patients"
+            to="/app/patients"
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             <Search size={16} />
@@ -115,7 +115,7 @@ export function DashboardPage() {
                       {initials(item.patientName)}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <Link to={`/patients/${item.patientId}`} className="truncate text-sm font-medium text-slate-800 hover:text-emerald-700">
+                      <Link to={`/app/patients/${item.patientId}`} className="truncate text-sm font-medium text-slate-800 hover:text-emerald-700">
                         {item.patientName}
                       </Link>
                       <p className="truncate text-xs text-slate-500">{item.label}</p>
@@ -137,14 +137,14 @@ export function DashboardPage() {
                 onClick={() => patients[0] && setEncounterTarget(patients[0].id)}
               />
               <QuickAction icon={<CalendarClock size={18} />} label="Follow-Up" onClick={() => patients[0] && setFollowUpTarget(patients[0].id)} />
-              <Link to="/patients" className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 px-3 py-4 text-center hover:bg-slate-50">
+              <Link to="/app/patients" className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 px-3 py-4 text-center hover:bg-slate-50">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                   <Search size={18} />
                 </span>
                 <span className="text-xs font-medium text-slate-700">Search Patient</span>
               </Link>
               {currentUser.role === 'Organisation Admin' && (
-                <Link to="/reports" className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 px-3 py-4 text-center hover:bg-slate-50">
+                <Link to="/app/reports" className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 px-3 py-4 text-center hover:bg-slate-50">
                   <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                     <BarChart3 size={18} />
                   </span>
@@ -164,7 +164,7 @@ export function DashboardPage() {
               {followUpsQueue.map((f) => (
                 <li key={f.id} className="px-5 py-3">
                   <div className="flex items-center justify-between gap-2">
-                    <Link to={`/patients/${f.patientId}`} className="text-sm font-medium text-slate-800 hover:text-emerald-700">
+                    <Link to={`/app/patients/${f.patientId}`} className="text-sm font-medium text-slate-800 hover:text-emerald-700">
                       {f.patientName}
                     </Link>
                     <Badge tone={f.status === 'overdue' ? 'danger' : 'warning'}>{f.status === 'overdue' ? 'Overdue' : 'Due'}</Badge>

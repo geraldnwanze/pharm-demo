@@ -1,19 +1,13 @@
 import { Check } from 'lucide-react'
 import { useState } from 'react'
 import { usePlatformData } from '../../context/PlatformContext'
+import { slugify } from '../../lib/format'
 import type { Organisation } from '../../types'
 import { Button } from '../ui/Button'
 import { FieldRow, Input, Label, Select } from '../ui/Field'
 import { Modal } from '../ui/Modal'
 
 const brandOptions = ['#0f9d6a', '#0ea5e9', '#7c3aed', '#dc2626', '#ea580c']
-
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
 
 const emptyForm = {
   name: '',

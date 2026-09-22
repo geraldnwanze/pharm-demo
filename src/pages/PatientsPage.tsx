@@ -103,7 +103,7 @@ export function PatientsPage() {
                         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700">
                           {initials(p.fullName)}
                         </span>
-                        <Link to={`/patients/${p.id}`} className="font-medium text-slate-800 group-hover:text-emerald-700">
+                        <Link to={`/app/patients/${p.id}`} className="font-medium text-slate-800 group-hover:text-emerald-700">
                           {p.fullName}
                         </Link>
                       </div>
@@ -121,7 +121,7 @@ export function PatientsPage() {
                     </td>
                     <td className="px-5 py-3 text-right">
                       <Link
-                        to={`/patients/${p.id}`}
+                        to={`/app/patients/${p.id}`}
                         className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-emerald-700 lg:opacity-0 lg:group-hover:opacity-100"
                       >
                         View <ArrowUpRight size={12} />

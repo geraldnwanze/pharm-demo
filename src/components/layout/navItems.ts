@@ -9,10 +9,10 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['Organisation Admin', 'Pharmacist', 'Support Staff'] },
-  { to: '/patients', label: 'Patients', icon: Users, roles: ['Organisation Admin', 'Pharmacist', 'Support Staff'] },
-  { to: '/reports', label: 'Reports', icon: BarChart3, roles: ['Organisation Admin'] },
-  { to: '/staff', label: 'Staff', icon: UsersRound, roles: ['Organisation Admin'] },
-  { to: '/audit-log', label: 'Audit Log', icon: FileClock, roles: ['Organisation Admin'] },
-  { to: '/settings', label: 'Settings', icon: Settings, roles: ['Organisation Admin'] },
+  { to: '/app', label: 'Dashboard', icon: LayoutDashboard, roles: ['Organisation Admin', 'Pharmacist', 'Support Staff'] },
+  { to: '/app/patients', label: 'Patients', icon: Users, roles: ['Organisation Admin', 'Pharmacist', 'Support Staff'] },
+  { to: '/app/reports', label: 'Reports', icon: BarChart3, roles: ['Organisation Admin'] },
+  { to: '/app/staff', label: 'Staff', icon: UsersRound, roles: ['Organisation Admin'] },
+  { to: '/app/audit-log', label: 'Audit Log', icon: FileClock, roles: ['Organisation Admin'] },
+  { to: '/app/settings', label: 'Settings', icon: Settings, roles: ['Organisation Admin'] },
 ]

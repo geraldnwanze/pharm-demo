@@ -14,13 +14,14 @@ export interface NewOrganisationInput {
   email: string
   adminName: string
   adminEmail: string
+  source?: 'platform-admin' | 'self-serve'
 }
 
 interface PlatformDataValue {
   tenants: Tenant[]
   platformAuditLog: AuditEntry[]
   createOrganisation: (input: NewOrganisationInput) => Tenant
-  logPlatformAction: (action: string, target: string) => void
+  logPlatformAction: (action: string, target: string, actor?: string) => void
 }
 
 const PlatformContext = createContext<PlatformDataValue | null>(null)
@@ -34,9 +35,9 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   const [tenants, setTenants] = useState<Tenant[]>(seedTenants)
   const [platformAuditLog, setPlatformAuditLog] = useState<AuditEntry[]>(seedPlatformAudit)
 
-  const logPlatformAction = useCallback((action: string, target: string) => {
+  const logPlatformAction = useCallback((action: string, target: string, actor = 'Earlybird Platform Admin') => {
     setPlatformAuditLog((prev) => [
-      { id: `plat-aud-${prev.length + 1}-${Date.now()}`, actor: 'Earlybird Platform Admin', action, target, timestamp: new Date().toISOString() },
+      { id: `plat-aud-${prev.length + 1}-${Date.now()}`, actor, action, target, timestamp: new Date().toISOString() },
       ...prev,
     ])
   }, [])
@@ -71,15 +72,19 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       auditLog: [
         {
           id: `${id}-aud-1`,
-          actor: 'Earlybird Platform',
-          action: 'Workspace created',
+          actor: input.source === 'self-serve' ? input.adminName : 'Earlybird Platform',
+          action: input.source === 'self-serve' ? 'Workspace created (self-serve signup)' : 'Workspace created',
           target: input.name,
           timestamp: new Date().toISOString(),
         },
       ],
     }
     setTenants((prev) => [tenant, ...prev])
-    logPlatformAction('Created organisation', `${input.name} (${tenant.organisation.subdomain})`)
+    logPlatformAction(
+      input.source === 'self-serve' ? 'Organisation self-registered' : 'Created organisation',
+      `${input.name} (${tenant.organisation.subdomain})`,
+      input.source === 'self-serve' ? `${input.adminName} · ${input.name}` : undefined,
+    )
     return tenant
   }, [logPlatformAction])
 

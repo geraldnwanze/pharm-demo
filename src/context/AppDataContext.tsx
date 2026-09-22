@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import { tenants as seedTenants } from '../data/seed'
-import { usePlatformData } from './PlatformContext'
-import type { AuditEntry, Encounter, FollowUp, Organisation, Patient, StaffMember, StaffRole } from '../types'
+import type { AuditEntry, Encounter, FollowUp, Organisation, Patient, StaffMember, StaffRole, Tenant } from '../types'
 
 export type CurrentUser = {
   name: string
@@ -18,7 +17,7 @@ interface AppDataValue {
   staff: StaffMember[]
   auditLog: AuditEntry[]
   currentUser: CurrentUser
-  switchTenant: (tenantId: string, asStaffId?: string) => void
+  switchTenant: (tenant: Tenant, asStaffId?: string) => void
   setCurrentUserRole: (role: StaffRole) => void
   getPatient: (id: string) => Patient | undefined
   addPatient: (input: Omit<Patient, 'id' | 'encounters' | 'followUps' | 'registeredAt' | 'status'>) => Patient
@@ -43,7 +42,6 @@ function nextPatientId(existing: Patient[], prefix: string) {
 }
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
-  const { tenants } = usePlatformData()
   const [currentTenantId, setCurrentTenantId] = useState(defaultTenant.id)
   const [org, setOrg] = useState<Organisation>(defaultTenant.organisation)
   const [patientList, setPatientList] = useState<Patient[]>(defaultTenant.patients)
@@ -62,8 +60,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     ])
   }, [currentUser.name])
 
-  const switchTenant: AppDataValue['switchTenant'] = useCallback((tenantId, asStaffId) => {
-    const tenant = tenants.find((t) => t.id === tenantId) ?? defaultTenant
+  const switchTenant: AppDataValue['switchTenant'] = useCallback((tenant, asStaffId) => {
     setCurrentTenantId(tenant.id)
     setOrg(tenant.organisation)
     setPatientList(tenant.patients)
@@ -71,7 +68,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setAudit(tenant.auditLog)
     const staffMatch = tenant.staff.find((s) => s.id === asStaffId) ?? tenant.staff[0]
     setCurrentUser({ name: staffMatch.name, role: staffMatch.role, email: staffMatch.email })
-  }, [tenants])
+  }, [])
 
   const setCurrentUserRole = useCallback((role: StaffRole) => {
     const match = staffList.find((s) => s.role === role)

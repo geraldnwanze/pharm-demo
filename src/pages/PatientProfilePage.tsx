@@ -67,7 +67,7 @@ export function PatientProfilePage() {
     return items.sort((a, b) => (a.date < b.date ? 1 : -1))
   }, [patient])
 
-  if (!id) return <Navigate to="/patients" replace />
+  if (!id) return <Navigate to="/app/patients" replace />
   if (!patient) {
     return (
       <div className="mx-auto max-w-3xl">
@@ -80,7 +80,7 @@ export function PatientProfilePage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <Link to="/patients" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800">
+      <Link to="/app/patients" className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800">
         <ArrowLeft size={15} /> Back to Patients
       </Link>
 

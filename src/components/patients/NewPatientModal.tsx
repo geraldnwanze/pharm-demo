@@ -51,7 +51,7 @@ export function NewPatientModal({ open, onClose }: { open: boolean; onClose: () 
     })
     setForm(emptyForm)
     onClose()
-    navigate(`/patients/${created.id}`)
+    navigate(`/app/patients/${created.id}`)
   }
 
   return (
